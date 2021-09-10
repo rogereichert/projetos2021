@@ -118,9 +118,9 @@ const DOM = {
 
     // Atualiza os valores nos cards principais
     updateBalance(){
-        document.getElementById('incomeDisplay').innerHTML = Transaction.income();
-        document.getElementById('expenseDisplay').innerHTML = Transaction.expenses();
-        document.getElementById('totalDisplay').innerHTML = Transaction.total();
+        document.getElementById('incomeDisplay').innerHTML = Utils.formatCurrency(Transaction.income());
+        document.getElementById('expenseDisplay').innerHTML = Utils.formatCurrency(Transaction.expenses());
+        document.getElementById('totalDisplay').innerHTML = Utils.formatCurrency(Transaction.total());
     }
 
 }
