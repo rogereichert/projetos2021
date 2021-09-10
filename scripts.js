@@ -59,6 +59,7 @@ const DOM = {
 
         DOM.transactionsContainer.appendChild(tr);
     },
+
     innerHTMLTransaction(transaction){
 
         const CSSclass = transaction.amount > 0 ? "income" : "expense";
@@ -76,7 +77,13 @@ const DOM = {
         `;
 
         return html;
+    },
+
+    // Atualiza os valores nos cards principais
+    updateBalance(){
+        
     }
+
 }
 
 const Utils = {
