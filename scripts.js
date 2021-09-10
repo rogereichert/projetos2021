@@ -81,7 +81,7 @@ const DOM = {
 
     // Atualiza os valores nos cards principais
     updateBalance(){
-        
+
     }
 
 }
@@ -99,7 +99,7 @@ const Utils = {
             currency: "BRL"
         });
 
-        return signal + value;
+        return value;
     }
 }
 
