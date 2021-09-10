@@ -1,110 +1,111 @@
 const Modal = {
-  open() {
-    // Abrir modal
-    // Adicionar a class active ao modal
-    document.querySelector(".modal-overlay").classList.add("active");
-  },
-  close() {
-    // Fechar o modal
-    // Remover a class active do modal
-    document.querySelector(".modal-overlay").classList.remove("active");
-  },
+    open() {
+        // Abrir modal
+        // Adicionar a class active ao modal
+        document.querySelector(".modal-overlay").classList.add("active");
+    },
+    close() {
+        // Fechar o modal
+        // Remover a class active do modal
+        document.querySelector(".modal-overlay").classList.remove("active");
+    },
 };
-
-const transactions = [
-  {
-    id: 1,
-    description: "Luz",
-    amount: -10000,
-    date: "09/09/2021",
-  },
-  {
-    id: 2,
-    description: "Website",
-    amount: 100000,
-    date: "09/09/2021",
-  },
-  {
-    id: 3,
-    description: "Internet",
-    amount: -1000,
-    date: "09/09/2021",
-  },
-  {
-    id: 4,
-    description: "APP",
-    amount: 20000,
-    date: "09/09/2021",
-  },
-];
 
 /**
  * Objeto que contém funções que realizam os cálculos dos incomes e expenses
  * Para mostrar nos cards
  */
 const Transaction = {
-  all: transactions,
-  add(transaction) {
-    Transaction.all.push(transaction);
+    all: [{
+            description: "Luz",
+            amount: -10000,
+            date: "09/09/2021",
+        },
+        {
+            description: "Website",
+            amount: 100000,
+            date: "09/09/2021",
+        },
+        {
+            description: "Internet",
+            amount: -1000,
+            date: "09/09/2021",
+        },
+        {
+            description: "APP",
+            amount: 20000,
+            date: "09/09/2021",
+        },
+    ],
 
-    App.reload();
-  },
+    add(transaction) {
+        Transaction.all.push(transaction);
 
-  income() {
-    // Pegar todas as transações
-    // Para cada transação, se a transação é maior que zero
-    // Somar a uma variável e retornar a variável
-    let income = 0;
+        App.reload();
+    },
 
-    Transaction.all.forEach((transaction) => {
-      if (transaction.amount > 0) {
-        income += transaction.amount;
-      }
-    });
+    remove(index) {
+        Transaction.all.splice(index, 1);
 
-    return income;
-  },
+        App.reload();
+    },
 
-  expenses() {
-    // Pegar todas as transações
-    // Para cada transação, se a transação é maior que zero
-    // Somar a uma variável e retornar a variável
+    income() {
+        // Pegar todas as transações
+        // Para cada transação, se a transação é maior que zero
+        // Somar a uma variável e retornar a variável
+        let income = 0;
 
-    let expense = 0;
+        Transaction.all.forEach((transaction) => {
+            if (transaction.amount > 0) {
+                income += transaction.amount;
+            }
+        });
 
-    Transaction.all.forEach((transaction) => {
-      if (transaction.amount < 0) {
-        expense += transaction.amount;
-      }
-    });
+        return income;
+    },
 
-    return expense;
-  },
-  total() {
-    // Entrada - Saídas
-    return Transaction.income() + Transaction.expenses();
-  },
+    expenses() {
+        // Pegar todas as transações
+        // Para cada transação, se a transação é maior que zero
+        // Somar a uma variável e retornar a variável
+
+        let expense = 0;
+
+        Transaction.all.forEach((transaction) => {
+            if (transaction.amount < 0) {
+                expense += transaction.amount;
+            }
+        });
+
+        return expense;
+    },
+    total() {
+        // Entrada - Saídas
+        let total = Transaction.income() + Transaction.expenses();
+        return total;
+    },
 };
 
 const DOM = {
-  transactionsContainer: document.querySelector("#data-table tbody"),
+    transactionsContainer: document.querySelector("#data-table tbody"),
 
-  addTransaction(transaction, index) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = DOM.innerHTMLTransaction(transaction);
+    addTransaction(transaction, index) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = DOM.innerHTMLTransaction(transaction);
 
-    DOM.transactionsContainer.appendChild(tr);
-  },
+        DOM.transactionsContainer.appendChild(tr);
+    },
 
-  innerHTMLTransaction(transaction) {
-    // verifica se o valor é maior que 0 recebe o atributo income senão recebe expense
-    const CSSclass = transaction.amount > 0 ? "income" : "expense";
+    innerHTMLTransaction(transaction) {
+        // verifica se o valor é maior que 0 recebe o atributo income senão recebe expense
+        const CSSclass = transaction.amount > 0 ? "income" : "expense";
 
-    // obtém do objeto Utils a formatação da moeda
-    const amount = Utils.formatCurrency(transaction.amount);
+        // obtém do objeto Utils a formatação da moeda
+        const amount = Utils.formatCurrency(transaction.amount);
 
-    // obtém todo o código html da parte de td da tabela
-    const html = `
+        // obtém todo o código html da parte de td da tabela
+        const html = `
             <td class="description">${transaction.description}</td>
             <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
@@ -114,72 +115,68 @@ const DOM = {
             
         `;
 
-    return html;
-  },
+        return html;
+    },
 
-  // Atualiza os valores nos cards principais
-  updateBalance() {
-    document.getElementById("incomeDisplay").innerHTML = Utils.formatCurrency(
-      Transaction.income()
-    );
-    document.getElementById("expenseDisplay").innerHTML = Utils.formatCurrency(
-      Transaction.expenses()
-    );
-    document.getElementById("totalDisplay").innerHTML = Utils.formatCurrency(
-      Transaction.total()
-    );
-  },
+    // Atualiza os valores nos cards principais
+    updateBalance() {
+        document.getElementById("incomeDisplay").innerHTML = Utils.formatCurrency(
+            Transaction.income()
+        );
+        document.getElementById("expenseDisplay").innerHTML = Utils.formatCurrency(
+            Transaction.expenses()
+        );
+        document.getElementById("totalDisplay").innerHTML = Utils.formatCurrency(
+            Transaction.total()
+        );
+    },
 
-  /**
-   * Função que limpa os campos html para fazer o reload() sem ocorrer algum bug de preencher
-   * Novamente os dados na tela
-   */
-  clearTransactions(){
-    DOM.transactionsContainer.innerHTML = "";
-  }
+    /**
+     * Função que limpa os campos html para fazer o reload() sem ocorrer algum bug de preencher
+     * Novamente os dados na tela
+     */
+    clearTransactions() {
+        DOM.transactionsContainer.innerHTML = "";
+    }
 };
 
 const Utils = {
-  formatCurrency(value) {
-    const signal = Number(value) < 0 ? "-" : "";
+    formatCurrency(value) {
+        const signal = Number(value) < 0 ? "-" : "";
 
-    value = String(value).replace(/\D/g, "");
+        value = String(value).replace(/\D/g, "");
 
-    value = Number(value) / 100;
+        value = Number(value) / 100;
 
-    value = value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+        value = value.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        });
 
-    return signal + value;
-  },
+        return signal + value;
+    },
 };
 
+const Form = {
+    
+}
+
 const App = {
-  init() {
+    init() {
 
-    // Adiciona as transações para aparecer em tela
-    Transaction.all.forEach((transaction) => {
-      DOM.addTransaction(transaction);
-    });
+        // Adiciona as transações para aparecer em tela
+        Transaction.all.forEach((transaction) => {
+            DOM.addTransaction(transaction);
+        });
 
-    // Função que atualiza os cards no HTML
-    DOM.updateBalance();
-  },
+        // Função que atualiza os cards no HTML
+        DOM.updateBalance();
+    },
 
-  reload() {
-      DOM.clearTransactions();
-      App.init();
-  },
+    reload() {
+        DOM.clearTransactions();
+        App.init();
+    },
 };
 
 App.init();
-
-
-Transaction.add({
-  id: 32,
-  description: "Alô",
-  amount: 300,
-  date: "23/01/21",
-});
